@@ -1,4 +1,4 @@
-export interface Root {
+export interface WeatherDataType {
   coord: Coord;
   weather: Weather[];
   base: string;

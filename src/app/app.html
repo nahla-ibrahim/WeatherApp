@@ -1,4 +1,18 @@
-<div class="container px-3 mx-auto">
-  <div class="left"></div>
-  <div class="right"></div>
+<!-- @if(weather()){
+<p>{{getTime(weather()!.sys.sunrise)}}</p>
+<p>{{getTime(weather()!.sys.sunset)}}</p>
+} -->
+
+<div class="container px-6 mx-auto z-10 ">
+  <div class="left w-[60%]">
+    <!-- <app-search /> -->
+    <app-cityinfo [city]="weather()?.name" [country]="weather()?.sys?.country" [weather]="weather()!.weather"
+      [temp]="weather()!.main.temp" />
+    <app-todayinfo />
+    <app-moreinfo [wind]="weather()!.wind" [humidity]="weather()?.main?.humidity" [temp]="weather()?.main?.feels_like"
+      [cloud]="weather()?.clouds?.all" />
+  </div>
+  <div class="right">
+    <!-- <app-weekinfo /> -->
+  </div>
 </div>

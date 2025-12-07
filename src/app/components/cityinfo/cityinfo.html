@@ -1,0 +1,10 @@
+  <div class="flex justify-center flex-col items-center mt-10 mb-6">
+    <p> {{city()}}, {{country()}}</p>
+
+    <h2 class="text-4xl ">
+      {{(temp() - tempC).toFixed(1) }}°C
+    </h2>
+
+    <p>{{weather()[0].description}}</p>
+    <img src="https://openweathermap.org/img/wn/{{weather()[0].icon}}@2x.png" class="w-10 m-0 p-0" />
+  </div>
