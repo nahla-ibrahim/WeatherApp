@@ -1,1 +1,31 @@
+<div class="bg-slate w-full p-5 rounded-3xl  mt-5">
+  <div class="flex justify-between items-center">
+    <h3 class="opacity-90">Todays Forecast</h3>
+  </div>
+  @if(forecastData()){
+  <div class="grid gap-6 grid-cols-[repeat(auto-fit,minmax(150px,1fr))] mt-3 ">
 
+    @for (item of todayForecast(); track $index) {
+    <div class="flex flex-col text-center items-center bg-light-slate rounded-2xl py-6">
+      <p class="text-sm">{{item.dt_txt| date:'h a' }}</p>
+      <img src="https://openweathermap.org/img/wn/{{item.weather[0].icon}}@2x.png" class="w-16" />
+      <p class="text-2xl">{{(item.main.temp ).toFixed(0)}}°C</p>
+      <p class="text-sm">{{item.weather[0].main}}</p>
+    </div>
+    }
+  </div>
+  }
+
+
+
+
+
+
+  <!-- <p>Day: {{ item.dt_txt | date:'yyyy-MM-dd' }}</p>
+        <p>Time: {{ item.dt_txt | date:'h a' }}</p>
+        <p>{{item.dt}}C</p>
+        <p>{{item.weather[0].icon}}</p>
+        <P>////////////////////////////////</P> -->
+
+
+</div>

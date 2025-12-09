@@ -3,16 +3,20 @@
 <p>{{getTime(weather()!.sys.sunset)}}</p>
 } -->
 
-<div class="container px-6 mx-auto z-10 ">
+
+@if(loaded()){
+
+<div class="container px-6 mx-auto z-10 flex gap-8">
   <div class="left w-[60%]">
-    <!-- <app-search /> -->
-    <app-cityinfo [city]="weather()?.name" [country]="weather()?.sys?.country" [weather]="weather()!.weather"
-      [temp]="weather()!.main.temp" />
-    <app-todayinfo />
-    <app-moreinfo [wind]="weather()!.wind" [humidity]="weather()?.main?.humidity" [temp]="weather()?.main?.feels_like"
-      [cloud]="weather()?.clouds?.all" />
+    <app-search (citySelected)="onChangeCity($event)" />
+    <app-cityinfo [city]="forecast()?.city?.name" [country]="forecast()?.city?.country"
+      [weather]="forecast()!.list[0].weather" [temp]="forecast()!.list[0].main.temp" />
+    <app-todayinfo [forecastData]="forecast()!.list" />
+    <app-moreinfo [wind]="forecast()!.list[0].wind" [humidity]="forecast()!.list[0].main.humidity"
+      [temp]="forecast()!.list[0].main.feels_like" [cloud]="forecast()!.list[0].clouds.all" />
   </div>
   <div class="right">
-    <!-- <app-weekinfo /> -->
+    <app-weekinfo [data]="dailyData()?.list" />
   </div>
 </div>
+}

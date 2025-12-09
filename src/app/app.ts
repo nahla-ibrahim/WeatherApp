@@ -1,16 +1,16 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { Weather } from './services/weather';
 import { Cityinfo } from './components/cityinfo/cityinfo';
-import { Search } from './components/search/search';
 import { Todayinfo } from './components/todayinfo/todayinfo';
 import { Moreinfo } from './components/moreinfo/moreinfo';
 import { Weekinfo } from './components/weekinfo/weekinfo';
-import { WeatherDataType } from './types';
-import { TEMP_C } from './constants';
+import { DailyDataTypes } from './types/DailyData';
+import { forkJoin, switchMap, tap } from 'rxjs';
+import { Search } from './components/search/search';
 
 @Component({
   selector: 'app-root',
-  imports: [Cityinfo, Search, Todayinfo, Moreinfo, Weekinfo],
+  imports: [Cityinfo, Todayinfo, Moreinfo, Weekinfo, Search],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
@@ -23,27 +23,54 @@ export class App implements OnInit {
   weatherServ = inject(Weather);
   lon: number | null = null;
   lat: number | null = null;
-  weather = signal<WeatherDataType | null>(null);
-  tempC = TEMP_C;
+  forecast = signal<forecastData | null>(null);
+  dailyData = signal<DailyDataTypes | null>(null);
+  city = signal('');
+  loaded = signal(false);
 
   sendCurrentloc() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
         this.lon = position.coords.longitude;
         this.lat = position.coords.latitude;
-        this.weatherServ.getCurrentLoc(this.lat, this.lon).subscribe(
-          (res) => {
-            this.weather.set(res);
-          },
-          (error) => {
-            console.error('Error getting location:', error);
-            alert('Could not get your location. Please enable location services.');
-          }
-        );
+        this.weatherServ
+          .getCity(this.lat, this.lon)
+          .pipe(
+            tap((res) => {
+              this.city.set(res[0].name);
+            }),
+            switchMap((res) => {
+              const city = this.city();
+              return forkJoin({
+                forecast: this.weatherServ.getforecast(city),
+                daily: this.weatherServ.getDailyData(city),
+              });
+            })
+          )
+          .subscribe(
+            (res) => {
+              this.forecast.set(res.forecast);
+              this.dailyData.set(res.daily);
+
+              this.loaded.set(true);
+            },
+            () => alert('Error in API calls')
+          );
       });
     } else {
       alert('Geolocation is not supported by your browser.');
     }
+  }
+  onChangeCity(cityName: string) {
+    this.city.set(cityName);
+    this.weatherServ.getforecast(cityName).subscribe(
+      (res) => {
+        this.forecast.set(res);
+      },
+      (err) => alert(`City "${cityName}" Not Found`)
+    );
+
+    this.weatherServ.getDailyData(cityName).subscribe((res) => this.dailyData.set(res));
   }
 
   /////////////sunset & sunrise /////////////

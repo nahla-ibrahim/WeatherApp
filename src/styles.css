@@ -1,2 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import 'tailwindcss';
+@theme {
+  --color-slate: oklch(70.4% 0.04 256.788);
+  --color-light-slate: oklch(55.4% 0.046 257.417);
+}

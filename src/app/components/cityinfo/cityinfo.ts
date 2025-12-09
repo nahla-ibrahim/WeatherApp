@@ -1,6 +1,4 @@
-import { Component, inject, input } from '@angular/core';
-import { Weather } from '../../types';
-import { TEMP_C } from '../../constants';
+import { Component, input } from '@angular/core';
 
 @Component({
   selector: 'app-cityinfo',
@@ -13,5 +11,4 @@ export class Cityinfo {
   country = input<string>();
   weather = input<Weather[]>([]);
   temp = input<number>(0);
-  tempC = TEMP_C;
 }

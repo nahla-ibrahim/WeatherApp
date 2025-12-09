@@ -1,1 +1,9 @@
-<p>search works!</p>
+<div class=" text-gray-600 w-full relative">
+  <input name="serch" placeholder="enter city name"
+    class="w-full  bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none border border-gray-300"
+    [value]="searchText()" (input)="onInput($event.target.value)" (keydown.enter)="searchCity()">
+
+  <button type="submit" class="absolute right-0 top-0 transform -translate-x-1/2 h-full p-2" (click)="searchCity()">
+    <fa-icon [icon]="search" class="cursor-pointer" />
+  </button>
+</div>
