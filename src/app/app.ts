@@ -7,6 +7,7 @@ import { Weekinfo } from './components/weekinfo/weekinfo';
 import { DailyDataTypes } from './types/DailyData';
 import { forkJoin, switchMap, tap } from 'rxjs';
 import { Search } from './components/search/search';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-root',
@@ -20,6 +21,7 @@ export class App implements OnInit {
   ngOnInit(): void {
     this.sendCurrentloc();
   }
+  toast = inject(ToastrService);
   weatherServ = inject(Weather);
   lon: number | null = null;
   lat: number | null = null;
@@ -54,11 +56,11 @@ export class App implements OnInit {
 
               this.loaded.set(true);
             },
-            () => alert('Error in API calls')
+            () => this.toast.error('Error in API calls')
           );
       });
     } else {
-      alert('Geolocation is not supported by your browser.');
+      this.toast.error('Geolocation is not supported by your browser.');
     }
   }
   onChangeCity(cityName: string) {
@@ -67,7 +69,7 @@ export class App implements OnInit {
       (res) => {
         this.forecast.set(res);
       },
-      (err) => alert(`City "${cityName}" Not Found`)
+      (err) => this.toast.error(`City "${cityName}" Not Found`)
     );
 
     this.weatherServ.getDailyData(cityName).subscribe((res) => this.dailyData.set(res));
