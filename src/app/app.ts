@@ -1,17 +1,26 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  effect,
+  ElementRef,
+  inject,
+  OnInit,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { Weather } from './services/weather';
 import { Cityinfo } from './components/cityinfo/cityinfo';
-import { Todayinfo } from './components/todayinfo/todayinfo';
+import { forecast } from './components/forecast/forecast';
 import { Moreinfo } from './components/moreinfo/moreinfo';
-import { Weekinfo } from './components/weekinfo/weekinfo';
+
 import { DailyDataTypes } from './types/DailyData';
-import { forkJoin, switchMap, tap } from 'rxjs';
 import { Search } from './components/search/search';
 import { ToastrService } from 'ngx-toastr';
+import { forecastData, List, Status } from './types/forecast';
 
 @Component({
   selector: 'app-root',
-  imports: [Cityinfo, Todayinfo, Moreinfo, Weekinfo, Search],
+  imports: [Cityinfo, Moreinfo, Search, forecast],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
@@ -27,47 +36,55 @@ export class App implements OnInit {
   lat: number | null = null;
   forecast = signal<forecastData | null>(null);
   dailyData = signal<DailyDataTypes | null>(null);
-  city = signal('');
   loaded = signal(false);
+  todayData = signal<List | null>(null);
+
+  getBackgroundImage = (status: Status, isMorning: boolean) => {
+    return (isMorning ? 'morning' : 'night') + '-' + status + '.mp4';
+  };
+
+  checkIsMorning = (sunrise: number, sunset: number) => {
+    const sunriseLocal = new Date(sunrise * 1000);
+    const sunsetLocal = new Date(sunset * 1000);
+    const date = new Date();
+    return date > sunriseLocal && date < sunsetLocal;
+  };
 
   sendCurrentloc() {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        this.lon = position.coords.longitude;
-        this.lat = position.coords.latitude;
-        this.weatherServ
-          .getCity(this.lat, this.lon)
-          .pipe(
-            tap((res) => {
-              this.city.set(res[0].name);
-            }),
-            switchMap((res) => {
-              const city = this.city();
-              return forkJoin({
-                forecast: this.weatherServ.getforecast(city),
-                daily: this.weatherServ.getDailyData(city),
-              });
-            })
-          )
-          .subscribe(
-            (res) => {
-              this.forecast.set(res.forecast);
-              this.dailyData.set(res.daily);
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          this.lon = position.coords.longitude;
+          this.lat = position.coords.latitude;
+          this.weatherServ.getCity(this.lat, this.lon).subscribe((res) => {
+            console.log(res);
 
-              this.loaded.set(true);
-            },
-            () => this.toast.error('Error in API calls')
-          );
-      });
+            this.weatherServ.getforecast(res[0].name).subscribe((forres) => {
+              this.forecast.set(forres);
+              this.todayData.set(forres.list[0]);
+              console.log(this.forecast());
+            });
+            this.weatherServ.getDailyData(res[0].name).subscribe((dailyres) => {
+              this.dailyData.set(dailyres);
+
+              console.log(this.dailyData());
+            });
+          });
+
+          this.loaded.set(true);
+        },
+        () => this.toast.error('Error in API calls')
+      );
     } else {
       this.toast.error('Geolocation is not supported by your browser.');
     }
   }
+
   onChangeCity(cityName: string) {
-    this.city.set(cityName);
     this.weatherServ.getforecast(cityName).subscribe(
       (res) => {
         this.forecast.set(res);
+        this.todayData.set(res.list[0]);
       },
       (err) => this.toast.error(`City "${cityName}" Not Found`)
     );
@@ -75,12 +92,16 @@ export class App implements OnInit {
     this.weatherServ.getDailyData(cityName).subscribe((res) => this.dailyData.set(res));
   }
 
-  /////////////sunset & sunrise /////////////
-  getTime(timestamp: number): string {
-    const data = new Date(timestamp * 1000);
-    return data.toLocaleTimeString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
+  @ViewChild('bgVideo') bgVideo!: ElementRef<HTMLVideoElement>;
+
+  currentVideo = signal(
+    'getBackgroundImage(todayData()!.weather[0].main, checkIsMorning(forecast()?.city?.sunrise!, forecast()?.city?.sunset!)).mp4'
+  );
+
+  changeVideo(newSrc: string) {
+    this.currentVideo.set(newSrc);
+    setTimeout(() => {
+      this.bgVideo.nativeElement.load();
     });
   }
 }

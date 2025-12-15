@@ -1,0 +1,40 @@
+<div class="bg-slate/30 w-full p-5 rounded-3xl my-2  ">
+  <div class="flex  items-center border-b mb-3 gap-5 border-gray-500">
+    <h3 class=" mb-3 cursor-pointer" (click)="activeForecast('one')" [ngClass]="
+   {' text-black/50': isActive() !=='one' }">
+      Todays Forecast</h3>
+    <h3 class="opacity-90 mb-3 cursor-pointer" (click)="activeForecast('two')" [ngClass]="
+   {' text-black/50': isActive() !=='two' }">Weeks Forecast</h3>
+  </div>
+  @if(forecastData() && data()){
+  @if(isActive() == 'one'){
+  <div class="flex gap-2 overflow-x-auto whitespace-nowrap lg:grid lg:grid-cols-[repeat(auto-fit,minmax(100px,1fr))] ">
+
+    @for (item of forecast24H(); track $index) {
+    <div class=" flex flex-col text-center items-center bg-light-slate/40 rounded-2xl py-6 min-w-[100px]">
+      <p class="text-sm">{{item.dt_txt| date:'h a' }}</p>
+      <img src="https://openweathermap.org/img/wn/{{item.weather[0].icon}}@2x.png" class="w-16" />
+      <p class="text-2xl">{{(item.main.temp ).toFixed(0)}}°C</p>
+      <p class="text-sm">{{item.weather[0].main}}</p>
+    </div>
+    }
+  </div>
+  }
+  @else{
+  <div class="flex gap-2 overflow-x-auto whitespace-nowrap lg:grid lg:grid-cols-[repeat(auto-fit,minmax(100px,1fr))] ">
+    @for (item of data(); track $index) {
+    <div class="flex flex-col text-center items-center bg-light-slate/40 rounded-2xl py-6 min-w-[100px] ">
+      <p class="text-sm">{{item.dt * 1000 | date:'EEE' }}</p>
+      <img src="https://openweathermap.org/img/wn/{{item.weather[0].icon}}@2x.png" class="w-16" />
+      <div class="flex text-2xl">
+        <p>{{(item.temp.min).toFixed(0)}}</p>/<p>{{(item.temp.max).toFixed(0)}}</p>
+      </div>
+      <p class="text-sm">{{item.weather[0].main}}</p>
+    </div>
+    }
+  </div>
+  }
+  }
+
+
+</div>

@@ -1,6 +1,7 @@
 import { Component, input } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faWind, faDroplet, faTemperature4, faCloud } from '@fortawesome/free-solid-svg-icons';
+import { Wind } from '../../types/forecast';
 @Component({
   selector: 'app-moreinfo',
   imports: [FontAwesomeModule],

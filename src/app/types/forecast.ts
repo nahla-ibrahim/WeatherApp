@@ -1,4 +1,4 @@
-interface forecastData {
+export interface forecastData {
   cod: string;
   message: number;
   cnt: number;
@@ -20,7 +20,7 @@ interface Coord {
   lon: number;
 }
 
-interface List {
+export interface List {
   dt: number;
   main: Main;
   weather: Weather[];
@@ -38,7 +38,7 @@ interface Sys {
 interface Rain {
   '3h': number;
 }
-interface Wind {
+export interface Wind {
   speed: number;
   deg: number;
   gust: number;
@@ -46,9 +46,12 @@ interface Wind {
 interface Clouds {
   all: number;
 }
-interface Weather {
+
+export type Status = 'Clouds' | 'Rain' | 'Snow' | 'Sunny' | 'Clear';
+
+export interface Weather {
   id: number;
-  main: string;
+  main: Status;
   description: string;
   icon: string;
 }

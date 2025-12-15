@@ -1,37 +1,35 @@
-<div class="bg-slate w-full p-5 rounded-3xl text-wh mt-5">
-  <div class="flex justify-between items-center">
-    <h3 class="opacity-90">More Details</h3>
-  </div>
-  <div class=" grid grid-cols-2 mt-3 gap-5 ">
-    <div class="flex gap-1.5 opacity-90">
+<div class="bg-slate/30 w-full p-5 rounded-3xl  my-2">
+
+  <div class=" sm:flex sm:flex-col gap-2 justify-between grid grid-cols-2">
+    <div class="flex gap-2 opacity-90  bg-light-slate/40 rounded-2xl p-3 sm:items-center">
       <fa-icon [icon]="fontIcon.faTemperature4" />
-      <div>
+      <div class="sm:flex sm:items-center sm:justify-between sm:w-full ">
         <p>real feel</p>
-        <p class="text-2xl opacity-100 mt-1">{{temp()!.toFixed(0) }}°C</p>
+        <p class="text-2xl sm:text-xl opacity-100 mt-1">{{temp()!.toFixed(0) }}°C</p>
       </div>
 
     </div>
-    <div class="flex gap-1.5 opacity-90">
+    <div class="flex gap-2 opacity-90 bg-light-slate/30 rounded-2xl p-3 sm:items-center">
       <fa-icon [icon]="fontIcon.faWind" />
-      <div>
+      <div class="sm:flex sm:items-center sm:justify-between sm:w-full">
         <p>wind</p>
-        <p class="text-2xl opacity-100 mt-1">{{wind()?.speed}}m/s</p>
+        <p class="text-2xl sm:text-xl opacity-100 mt-1">{{wind()?.speed}}m/s</p>
       </div>
 
     </div>
-    <div class="flex gap-1.5 opacity-90">
+    <div class="flex gap-2 opacity-90 bg-light-slate/40 rounded-2xl p-3 sm:items-center">
       <fa-icon [icon]="fontIcon.faDroplet" />
-      <div>
+      <div class="sm:flex sm:items-center sm:justify-between sm:w-full">
         <p>humidity</p>
-        <p class="text-2xl opacity-100 mt-1">{{humidity()}} %</p>
+        <p class="text-2xl sm:text-xl opacity-100 mt-1">{{humidity()}} %</p>
       </div>
     </div>
 
-    <div class="flex gap-1.5 opacity-90">
+    <div class="flex gap-2 opacity-90 bg-light-slate/40 rounded-2xl p-3 sm:items-center">
       <fa-icon [icon]="fontIcon.faCloud" />
-      <div>
+      <div class="sm:flex sm:items-center sm:justify-between sm:w-full">
         <p>cloud</p>
-        <p class="text-2xl opacity-100 mt-1">{{cloud()}} %</p>
+        <p class="text-2xl sm:text-xl opacity-100 mt-1">{{cloud()}} %</p>
       </div>
     </div>
   </div>

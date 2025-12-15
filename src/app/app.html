@@ -1,22 +1,22 @@
-<!-- @if(weather()){
-<p>{{getTime(weather()!.sys.sunrise)}}</p>
-<p>{{getTime(weather()!.sys.sunset)}}</p>
-} -->
-
+@if(forecast()){
+<video #bgVideo autoplay muted loop class="w-full opacity-85 fixed overflow-scroll h-full
+    object-cover -z-10"
+  [src]="getBackgroundImage(todayData()!.weather[0].main, checkIsMorning(forecast()?.city?.sunrise!, forecast()?.city?.sunset!))">
+</video>
 
 @if(loaded()){
-
-<div class="container px-6 mx-auto z-10 flex gap-8">
-  <div class="left w-[60%]">
+<div class="container px-3 mx-auto sm:h-screen">
+  <div class=" flex flex-col  h-full justify-between ">
     <app-search (citySelected)="onChangeCity($event)" />
-    <app-cityinfo [city]="forecast()?.city?.name" [country]="forecast()?.city?.country"
-      [weather]="forecast()!.list[0].weather" [temp]="forecast()!.list[0].main.temp" />
-    <app-todayinfo [forecastData]="forecast()!.list" />
-    <app-moreinfo [wind]="forecast()!.list[0].wind" [humidity]="forecast()!.list[0].main.humidity"
-      [temp]="forecast()!.list[0].main.feels_like" [cloud]="forecast()!.list[0].clouds.all" />
-  </div>
-  <div class="right">
-    <app-weekinfo [data]="dailyData()?.list" />
+    <div class=" sm:flex sm:justify-between  items-center ">
+      <app-cityinfo [city]="forecast()?.city?.name" [country]="forecast()?.city?.country"
+        [weather]="todayData()!.weather" [temp]="todayData()!.main.temp" />
+      <app-moreinfo [wind]="todayData()!.wind" [humidity]="todayData()!.main.humidity"
+        [temp]="todayData()!.main.feels_like" [cloud]="todayData()!.clouds.all" />
+    </div>
+
+    <app-forecast [forecastData]="forecast()!.list" [data]="dailyData()?.list" class="mb-8" />
   </div>
 </div>
+}
 }

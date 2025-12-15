@@ -23,6 +23,7 @@ export class Search {
   searchCity() {
     if (this.searchText().length) {
       this.citySelected.emit(this.searchText());
+      this.searchText.set('');
     }
   }
 }

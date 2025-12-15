@@ -3,7 +3,7 @@ export interface DailyDataTypes {
   cod: string;
   message: number;
   cnt: number;
-  list: List[];
+  list: dailyList[];
 }
 
 export interface City {
@@ -20,7 +20,7 @@ export interface Coord {
   lat: number;
 }
 
-export interface List {
+export interface dailyList {
   dt: number;
   sunrise: number;
   sunset: number;
