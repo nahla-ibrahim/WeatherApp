@@ -1,7 +1,7 @@
 <div class=" text-gray-600 w-full relative pt-10
 my-2">
   <input name="serch" placeholder="enter city name"
-    class="w-full bg-slate/40 h-10 px-5 pr-10 rounded-full text-sm focus:outline-none " [value]="searchText()"
+    class="w-full bg-base/40 h-10 px-5 pr-10 rounded-full text-sm focus:outline-none " [value]="searchText()"
     (input)="onInput($event.target.value)" (keydown.enter)="searchCity()">
 
   <button type="submit" class="absolute right-0 top-0 transform -translate-x-1/2 h-full pt-10 " (click)="searchCity()">

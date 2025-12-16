@@ -3,6 +3,6 @@
 @use 'node_modules/ngx-toastr/toastr';
 
 @theme {
-  --color-slate: white;
-  --color-light-slate: white;
+  --color-base: white;
+  --color-light-base: white;
 }
